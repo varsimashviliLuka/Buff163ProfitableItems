@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Buff Profit Parser</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/main.css') }}">
+    
+</head>
+<body>
+
+    <form class="grid" action="/">
+
+        <input type="submit" class="button" value="Refresh" id="btn">
+
+
+    </form>
+<br>
+<table>
+
+<tr style="color: green; " class="border_bottom">
+
+
+    <td>Image</td>
+    <td>Name</td>
+    <td>Sell Price</td>
+    <td>Buy Price</td>
+    <td>Quantity</td>
+    <td>Profit</td>
+    <td>Percentage</td>
+
+
+</tr>
+
+    {% for item in items %}
+    <tr style="color: green;" class="border_bottom">
+        <td><a target="_blank" href="{{ item.link }}"><img src="{{ item.img }}" class="image"></a></td>
+        <td><a target="_blank" href="{{ item.link }}" class="link">{{ item.name }}</a></td>
+        <td><p class="text">{{ item.sellPrice }}</p></td>
+        <td><p class="text">{{ item.buyPrice }}</p></td>
+        <td><p class="text">{{ item.sellNum }}</p></td>
+        <td><p class="text">{{ item.calculateProfitShort() }}</p></td>
+        <td><p class="text">{{ item.calculatePercentShort() }}</p></td>
+
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+<script>
+    const fewSeconds = 10
+ 
+ document.querySelector('#btn').addEventListener('click', (e) => {
+    setTimeout(() => {
+    e.target.disabled = true
+   }, 0.001 * 1000)
+    setTimeout(() => {
+    e.target.disabled = false
+   }, fewSeconds * 1000)
+ })
+</script>
+
+</body>
+</html>

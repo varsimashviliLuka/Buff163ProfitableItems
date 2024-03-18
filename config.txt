@@ -1,0 +1,16 @@
+{
+    "cookies": 
+    { 
+        "Cookies": ""
+    
+    },
+
+    "prices":
+    {
+        "minPrice": 3,
+        "maxPrice": 10,
+        "allowedPercent": 0.1
+
+    }
+
+}
