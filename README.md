@@ -10,7 +10,8 @@ allowedPercent is to find only items that is more likely to leave that amount of
 If you are on Windows you just simply open setup.bat file to install required libraries, or just install them from CMD/Terminal
 Required libraries are: "flask" and "requests"
 
-after everything is done, simply execute main python file, on Windows open start.bat, or just execute it from CMD/Terminal.
+After everything is ready, simply execute main python file, on Windows open start.bat, or just execute it from CMD/Terminal.
+To access the website you just go to localhost:5000 in your web browser.
 
 Please if you are able to make better Css design, contact me! :)
 
