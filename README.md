@@ -12,6 +12,8 @@ Required libraries are: "flask" and "requests"
 
 after everything is done, simply execute main python file, on Windows open start.bat, or just execute it from CMD/Terminal.
 
+Please if you are able to make better Css design, contact me! :)
+
 Enjoy!
 
 L.Varsimashvili
