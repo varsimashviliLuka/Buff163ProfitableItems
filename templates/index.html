@@ -13,7 +13,7 @@
 
     <form class="grid" action="/">
 
-        <input type="submit" class="button" value="Refresh" id="btn">
+        <input type="submit" class="button" value="Next Page" id="btn">
 
 
     </form>
@@ -38,11 +38,11 @@
     <tr style="color: green;" class="border_bottom">
         <td><a target="_blank" href="{{ item.link }}"><img src="{{ item.img }}" class="image"></a></td>
         <td><a target="_blank" href="{{ item.link }}" class="link">{{ item.name }}</a></td>
-        <td><p class="text">{{ item.sellPrice }}</p></td>
-        <td><p class="text">{{ item.buyPrice }}</p></td>
+        <td><p class="text">¥ {{ item.sellPrice }}</p></td>
+        <td><p class="text">¥ {{ item.buyPrice }}</p></td>
         <td><p class="text">{{ item.sellNum }}</p></td>
-        <td><p class="text">{{ item.calculateProfitShort() }}</p></td>
-        <td><p class="text">{{ item.calculatePercentShort() }}</p></td>
+        <td><p class="text">¥ {{ item.calculateProfitShort() }}</p></td>
+        <td><p class="text">{{ '%0.2f'|format(item.calculatePercentShort() * 100|float) }}%</p></td>
 
     </tr>
 
