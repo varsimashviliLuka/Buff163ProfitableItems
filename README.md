@@ -9,7 +9,7 @@ In config.txt you will also find "minPrice", "maxPrice" and "allowedPercent".
 minPrice and maxPrice is the range to find items. you can change that amount.
 allowedPercent is to find only items that is more likely to leave that amount of percent profit.
 
-"allowStickers" and "allowSouvenirs" are options wheater you prefer to find stickers and souvenirs or not. (1 is true and 0 is false)
+"allowStickers" and "allowSouvenirs" are options whether you prefer to find stickers and souvenirs or not. (1 is true and 0 is false)
 
 If you are on Windows you just simply open setup.bat file to install required libraries, or just install them from CMD/Terminal
 Required libraries are: "flask" and "requests"
