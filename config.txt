@@ -1,7 +1,7 @@
 {
     "cookies": 
     { 
-        "Cookies": "Device-Id=MTQV6MJLPlcllsepgT89; Locale-Supported=en; game=csgo; session=1-zuAjd9MzzFC_5rAut7EzfniRdk9FufLmMf1Sc-nckuFg2034337137; csrf_token=Ijk0ZjYwMTk5YTcyYjRmNDRhYTgwZmRiNjNmYWI5NGQxYzRhOTgyM2Ii.GReBVQ.OlkzUJJWLiB43_PDrczmRVk97Bc"
+        "Cookies": ""
 
     },
 
