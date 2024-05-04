@@ -1,11 +1,11 @@
-# Hello everyone! This program helps you to find profitable items on Buff163
+# Hello everyone! This program helps you find profitable items on Buff163
 # Hope you like it!
 # Importing libraries that I need
 from flask import Flask, render_template
 import json
 import requests
 
-# Here I am creating class for Skin and defining it's parameters, also creating functions to calculate it's profits and
+# Here I am creating class for Skin and defining its parameters, also creating functions to calculate its profits and
 # Percents
 class Skin:
     def __init__(self,name,sellPrice,buyPrice,img,link,id,sellNum):
@@ -59,12 +59,17 @@ def index():
     COOKIES = configJ["cookies"]
     MINPRICE = configJ["prices"]["minPrice"]
     MAXPRICE = configJ["prices"]["maxPrice"]
-    ALLOWEDPERCENT = configJ["prices"]["allowedPercent"]
+    ALLOWEDPERCENT = float(configJ["prices"]["allowedPercent"])/100
+    ALLOWESTICKERS = configJ["settings"]["allowStickers"]
+    ALLOWESOUVENIRS = configJ["settings"]["allowSouvenirs"]
 
     count += 1
     LINK = f"https://buff.163.com/api/market/goods?game=csgo&page_num={count}&page_size=100&min_price={MINPRICE}&max_price={MAXPRICE}&sort_by=price.asc"
     r = requests.get(LINK, cookies=COOKIES).json()
-    itemsUnfiltered = r["data"]["items"]
+    try:
+        itemsUnfiltered = r["data"]["items"]
+    except:
+        return f'<div align="center"><h1>Please Renew Cookies In Config File</h1></div>'
     items = []
 
     for item in itemsUnfiltered:
@@ -80,7 +85,14 @@ def index():
 
         if skin.sellNum >= 90 and skin.sellNum <= 700:
             if skin.calculatePercent() >= ALLOWEDPERCENT:
-                items.append(skin)
+                if "Sticker" in skin.name:
+                    if ALLOWESTICKERS == 1:
+                        items.append(skin)
+                elif "Souvenir" in skin.name:
+                    if ALLOWESOUVENIRS == 1:
+                        items.append(skin)
+                else:
+                    items.append(skin)
     return render_template('index.html', items=items)
 
 if __name__ == "__main__":
