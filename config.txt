@@ -1,15 +1,23 @@
 {
     "cookies": 
     { 
-        "Cookies": ""
-    
+        "Cookies": "Device-Id=MTQV6MJLPlcllsepgT89; Locale-Supported=en; game=csgo; session=1-zuAjd9MzzFC_5rAut7EzfniRdk9FufLmMf1Sc-nckuFg2034337137; csrf_token=Ijk0ZjYwMTk5YTcyYjRmNDRhYTgwZmRiNjNmYWI5NGQxYzRhOTgyM2Ii.GReBVQ.OlkzUJJWLiB43_PDrczmRVk97Bc"
+
     },
 
     "prices":
     {
         "minPrice": 3,
         "maxPrice": 10,
-        "allowedPercent": 0.1
+        "allowedPercent": 10
+
+
+    },
+
+    "settings":
+    {
+        "allowStickers": 1,
+        "allowSouvenirs": 1
 
     }
 
