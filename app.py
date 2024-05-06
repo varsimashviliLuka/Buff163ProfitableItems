@@ -52,7 +52,7 @@ def main(pageNum):
         except:
             session["allowSouvenirs"] = 0
         session['pageNum'] = 1
-        return redirect(f'/{session['pageNum']}')
+        return redirect(f'/{session["pageNum"]}')
     else:
         try:
             link = f"https://buff.163.com/api/market/goods?game=csgo&page_num={session['pageNum']}&page_size=100&min_price={session['minPrice']}&max_price={session['maxPrice']}&sort_by=price.asc"
