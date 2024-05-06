@@ -9,7 +9,7 @@ For this program to work, you need to collect your Buff163 cookies (go to Buff16
 ![Cookies](https://github.com/varsimashviliLuka/Buff163ProfitableItems/assets/163844037/07a7e95e-990b-4a54-9bb3-ebad7402e25e)
 
 
-After collecting cookies, run "main.py", type "python3 main.py" in terminal or "py main.py" in cmd. go to "localhost:5000" in your browser.
+After collecting cookies, run "app.py", type "python3 app.py" in terminal or "py app.py" in cmd (On Windows you can also open start.bat). go to "localhost:5000" in your browser.
 
 ![localhost](https://github.com/varsimashviliLuka/Buff163ProfitableItems/assets/163844037/6a6b6904-4f1d-408c-b4b7-26a1af7f8750)
 
