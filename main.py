@@ -1,102 +1,92 @@
-# Hello everyone! This program helps you find profitable items on Buff163
-# Hope you like it!
-# Importing libraries that I need
-from flask import Flask, render_template
-import json
+from flask import Flask, render_template, request, session, redirect
 import requests
+import random
 
-# Here I am creating class for Skin and defining its parameters, also creating functions to calculate its profits and
-# Percents
-class Skin:
-    def __init__(self,name,sellPrice,buyPrice,img,link,id,sellNum):
-        self.name=name
-        self.sellPrice=float(sellPrice)
-        self.buyPrice=float(buyPrice)
-        self.img=img
-        self.link=link
-        self.id=id
-        self.sellNum=int(sellNum)
-
-    def calculateProfit(self):
-        profit = float(self.sellPrice*0.975-self.buyPrice)
-        return profit
-
-    def calculatePercent(self):
-        percent = float(self.calculateProfit()/self.buyPrice)
-        return percent
-
-# Here I am creating 2 functions to return rounded number (It is easier to pass it to html)
-    def calculateProfitShort(self):
-        profit = round(self.calculateProfit(),3)
-        return float(profit)
-
-    def calculatePercentShort(self):
-        percent = round(self.calculatePercent(),3)
-        return float(percent)
-
-# I created this function to compare old config and new config, if there is differance page number (count) turns into 0 to start from 0
-def readConfig():
-    with open("config.txt","r") as f:
-        return f.read()
-
-oldConfig = readConfig()
+SECRET_KEY = random.randint(1000000000,9999999999)
 
 app = Flask(__name__)
-count = 0
+app.config['SECRET_KEY'] = str(SECRET_KEY)
+
+class Item:
+    def __init__(self, name, sellPrice, buyPrice, img, link, id, sellNum):
+        self.name = name
+        self.sellPrice = float(sellPrice)
+        self.buyPrice = float(buyPrice)
+        self.img = img
+        self.link = link
+        self.id = id
+        self.sellNum = int(sellNum)
+    def calculateProfit(self):
+        return float(self.sellPrice * 0.975 - self.buyPrice)
+    def calculatePercent(self):
+        return float(self.calculateProfit() / self.buyPrice) * 100
+
+@app.route('/<pageNum>', methods=['GET', 'POST'])
+def main(pageNum):
+    items = []
+    session['pageNum'] = int(pageNum)
+    if request.method == 'POST':
+        items.clear()
+        if request.form['cookies'] == "":
+            pass
+        else:
+            session["cookies"] = request.form['cookies']
+        if request.form['minPrice'] == "":
+            pass
+        else:
+            session["minPrice"] = float(request.form['minPrice'])
+        if request.form['maxPrice'] == "":
+            pass
+        else:
+            session["maxPrice"] = request.form['maxPrice']
+        if request.form['allowedPercent'] == "":
+            pass
+        else:
+            session["allowedPercent"] = float(request.form['allowedPercent'])
+        try:
+            session["allowStickers"] = request.form.getlist('allowStickers')[0]
+        except:
+            session["allowStickers"] = 0
+        try:
+            session["allowSouvenirs"] = request.form.getlist('allowSouvenirs')[0]
+        except:
+            session["allowSouvenirs"] = 0
+        session['pageNum'] = 1
+        return redirect(f'/{session['pageNum']}')
+    else:
+        try:
+            link = f"https://buff.163.com/api/market/goods?game=csgo&page_num={session['pageNum']}&page_size=100&min_price={session['minPrice']}&max_price={session['maxPrice']}&sort_by=price.asc"
+
+            response = requests.get(link, cookies={"cookies": session['cookies']}).json()
+
+            response = response['data']['items']
+            for each in response:
+                name = each["market_hash_name"]
+                sellPrice = each["sell_min_price"]
+                buyPrice = each["buy_max_price"]
+                img = each["goods_info"]["icon_url"]
+                link = f"https://buff.163.com/goods/{each['id']}?from=market"
+                id = each["id"]
+                sellNum = each["sell_num"]
+                item = Item(name, sellPrice, buyPrice, img, link, id, sellNum)
+                if item.calculatePercent() >= session["allowedPercent"]:
+                    if item.sellNum >= 90 and item.sellNum <= 700:
+                        if "Sticker" in item.name:
+                            if str(session["allowStickers"]) == "1":
+                                items.append(item)
+                        elif "Souvenir" in item.name:
+                            if str(session["allowSouvenirs"]) == "1":
+                                items.append(item)
+                        else:
+                            items.append(item)
+        except:
+            pass
+        return render_template("index.html",items=items)
 
 @app.route('/')
 def index():
-    global count
-    global oldConfig
-    config = readConfig()
+    return redirect('/0')
 
-    if config != oldConfig:
-        oldConfig = config
-        count = 0
-    with open("config.txt","r") as f:
-        configJ = json.load(f)
 
-    COOKIES = configJ["cookies"]
-    MINPRICE = configJ["prices"]["minPrice"]
-    MAXPRICE = configJ["prices"]["maxPrice"]
-    ALLOWEDPERCENT = float(configJ["prices"]["allowedPercent"])/100
-    ALLOWESTICKERS = configJ["settings"]["allowStickers"]
-    ALLOWESOUVENIRS = configJ["settings"]["allowSouvenirs"]
-
-    count += 1
-    LINK = f"https://buff.163.com/api/market/goods?game=csgo&page_num={count}&page_size=100&min_price={MINPRICE}&max_price={MAXPRICE}&sort_by=price.asc"
-    r = requests.get(LINK, cookies=COOKIES).json()
-    try:
-        itemsUnfiltered = r["data"]["items"]
-    except:
-        return f'<div align="center"><h1>Please Renew Cookies In Config File</h1></div>'
-    items = []
-
-    for item in itemsUnfiltered:
-        name = item["market_hash_name"]
-        sellPrice = item["sell_min_price"]
-        buyPrice = item["buy_max_price"]
-        img = item["goods_info"]["icon_url"]
-        id = item["id"]
-        sellNum = item["sell_num"]
-        link = f"https://buff.163.com/goods/{id}?from=market"
-
-        skin = Skin(name,sellPrice,buyPrice,img,link,id,sellNum)
-
-        if skin.sellNum >= 90 and skin.sellNum <= 700:
-            if skin.calculatePercent() >= ALLOWEDPERCENT:
-                if "Sticker" in skin.name:
-                    if ALLOWESTICKERS == 1:
-                        items.append(skin)
-                elif "Souvenir" in skin.name:
-                    if ALLOWESOUVENIRS == 1:
-                        items.append(skin)
-                else:
-                    items.append(skin)
-    return render_template('index.html', items=items)
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run()
-
-
-# L.Varsimashvili :)
