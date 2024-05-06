@@ -1,67 +1,219 @@
-<!doctype html>
-<html lang="">
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buff Profitable Items</title>
-    <link rel="stylesheet" href="{{ url_for('static',filename='css/main.css') }}">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #e8eaf6; /* Lighter grey background */
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+            color: #5C677D; /* Dark bluish grey */
+        }
+        form {
+            margin-bottom: 20px;
+            background: #f9f9f9; /* Light background for the form area */
+            padding: 20px;
+            border-radius: 8px;
+        }
+        form .input-group {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        form .input-group label {
+            margin-left: 10px;
+            color: #333; /* Dark grey for text */
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="checkbox"] {
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:hover,
+        input[type="number"]:hover,
+        input[type="number"]:focus {
+            border-color: #5C677D; /* Highlight input border on hover/focus */
+        }
+        input[type="submit"],
+        .button {
+            background-color: #00897B; /* Teal background */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+        input[type="submit"]:hover,
+        .button:hover {
+            background-color: #00695C; /* Darker teal on hover */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ccc;
+        }
+        th {
+            background-color: #5C677D; /* Header background */
+            color: white;
+        }
+        tr:nth-child(odd) {
+            background-color: #fafafa;
+        }
+        .image {
+            max-width: 100px;
+            height: auto;
+        }
+        .link {
+            color: #5C677D;
+            text-decoration: none;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+        .pagination li {
+            margin: 0 5px;
+        }
+        .pagination a {
+            color: white;
+            background-color: #5C677D;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .pagination a:hover {
+            text-decoration: underline;
+            background-color: #4a5568;
+        }
+        #backToTop {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            font-size: 16px;
+            background-color: #00897B; /* Teal background for consistency */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+        }
+    </style>
 </head>
 <body>
-
-    <form class="grid" action="/">
-
-        <input type="submit" class="button" value="Next Page" id="btn">
-
-
+<div class="container">
+    <h1>Buff Profitable Items</h1>
+    <form action="/{{ session['pageNum'] }}" method="post">
+        <div class="input-group">
+            <input type="text" name="cookies" placeholder="Cookies: {{ session['cookies'] }}" >
+        </div>
+        <div class="input-group">
+            <input type="number" name="minPrice" placeholder="Min Price: {{ session['minPrice'] }}" >
+        </div>
+        <div class="input-group">
+            <input type="number" name="maxPrice" placeholder="Max Price: {{ session['maxPrice'] }}" >
+        </div>
+        <div class="input-group">
+            <input type="number" name="allowedPercent" placeholder="Allowed Percent: {{ session['allowedPercent'] }}" >
+        </div>
+        <div class="input-group">
+            {% if "1" == session['allowStickers'] %}
+            <input type="checkbox" name="allowStickers" value="1" checked>
+            {% else %}
+            <input type="checkbox" name="allowStickers" value="1">
+            {% endif %}
+            <label>Allow Stickers</label>
+        </div>
+        <div class="input-group">
+            {% if "1" == session['allowSouvenirs'] %}
+            <input type="checkbox" name="allowSouvenirs" value="1" checked>
+            {% else %}
+            <input type="checkbox" name="allowSouvenirs" value="1">
+            {% endif %}
+            <label>Allow Souvenirs</label>
+        </div>
+        <input type="submit" value="Apply Filters">
     </form>
-<br>
-<table>
-
-<tr style="color: green; " class="border_bottom">
-
-
-    <td>Image</td>
-    <td>Name</td>
-    <td>Sell Price</td>
-    <td>Buy Price</td>
-    <td>Quantity</td>
-    <td>Profit</td>
-    <td>Percentage</td>
-
-
-</tr>
-
-    {% for item in items %}
-    <tr style="color: green;" class="border_bottom">
-        <td><a target="_blank" href="{{ item.link }}"><img src="{{ item.img }}" class="image"></a></td>
-        <td><a target="_blank" href="{{ item.link }}" class="link">{{ item.name }}</a></td>
-        <td><p class="text">¥ {{ item.sellPrice }}</p></td>
-        <td><p class="text">¥ {{ item.buyPrice }}</p></td>
-        <td><p class="text">{{ item.sellNum }}</p></td>
-        <td><p class="text">¥ {{ item.calculateProfitShort() }}</p></td>
-        <td><p class="text">{{ '%0.2f'|format(item.calculatePercentShort() * 100|float) }}%</p></td>
-
-    </tr>
-
-    {% endfor %}
-
-</table>
-
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Sell Price</th>
+                <th>Buy Price</th>
+                <th>Quantity</th>
+                <th>Profit</th>
+                <th>Percentage</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td><a target="_blank" href="{{ item.link }}"><img src="{{ item.img }}" class="image"></a></td>
+                <td><a target="_blank" href="{{ item.link }}" class="link">{{ item.name }}</a></td>
+                <td>¥ {{ item.sellPrice }}</td>
+                <td>¥ {{ item.buyPrice }}</td>
+                <td> {{ item.sellNum }} </td>
+                <td>¥ {{ item.calculateProfit() | round(3) }}</td>
+                <td>{{ (item.calculatePercent() ) | round(2) }}%</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <nav>
+<ul class="pagination">
+{% if session['pageNum'] > 0 %}
+    {% if session['pageNum'] > 1 %}
+    <li><a href="/{{ session['pageNum']-1 }}" class="button">Previous</a></li>
+    {% endif %}
+    <li><a href="/{{ session['pageNum']+1 }}" class="button">Next</a></li>
+{% endif %}
+</ul>
+</nav>
+</div>
+<button id="backToTop" onclick="scrollToTop()">Back to Top</button>
 <script>
-    const fewSeconds = 10
- 
- document.querySelector('#btn').addEventListener('click', (e) => {
-    setTimeout(() => {
-    e.target.disabled = true
-   }, 0.001 * 1000)
-    setTimeout(() => {
-    e.target.disabled = false
-   }, fewSeconds * 1000)
- })
+    function scrollToTop() {
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+    window.onscroll = function() {
+        var scrollPosition = document.documentElement.scrollTop || document.body.scrollTop;
+        if (scrollPosition > 100) {
+            document.getElementById('backToTop').style.display = 'block';
+        } else {
+            document.getElementById('backToTop').style.display = 'none';
+        }
+    };
 </script>
-
 </body>
 </html>
